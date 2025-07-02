@@ -24,7 +24,7 @@ jobs:
           lfs: false
       - uses: actions/setup-node@v3
         with:
-          node-version: '20.19.0'  # use 20.19.0 or later as required by Angular
+          node-version: '20.19.0'
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
       - name: Get Id Token
@@ -35,6 +35,9 @@ jobs:
                const coredemo = require('@actions/core')
                return await coredemo.getIDToken()
            result-encoding: string
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.19.0'
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
