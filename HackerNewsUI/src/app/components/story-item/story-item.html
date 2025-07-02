@@ -1,0 +1,34 @@
+<div class="story-item">
+  <div class="story-header">
+    <span class="story-rank">{{ index + 1 }}.</span>
+    <div class="story-content">
+      <h3 class="story-title">
+        <a *ngIf="story.hasUrl; else noLink" 
+           [href]="story.url" 
+           target="_blank" 
+           rel="noopener noreferrer">
+          {{ story.title }}
+        </a>
+        <ng-template #noLink>
+          <span>{{ story.title }}</span>
+        </ng-template>
+      </h3>
+      
+      <div class="story-meta">
+        <span class="score">{{ story.score }} points</span>
+        <span class="separator">•</span>
+        <span class="author">by {{ story.by }}</span>
+        <span class="separator">•</span>
+        <span class="time">{{ getTimeAgo(story.timeStamp) }}</span>
+        <span *ngIf="story.descendants > 0" class="separator">•</span>
+        <span *ngIf="story.descendants > 0" class="comments">
+          {{ story.descendants }} comments
+        </span>
+        <span *ngIf="story.hasUrl" class="separator">•</span>
+        <span *ngIf="story.hasUrl" class="domain">
+          ({{ getDomainFromUrl(story.url!) }})
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

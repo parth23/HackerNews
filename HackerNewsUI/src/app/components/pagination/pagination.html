@@ -1,0 +1,36 @@
+<nav class="pagination-nav" *ngIf="paginatedResult.totalPages > 1">
+  <div class="pagination-info">
+    Showing {{ (paginatedResult.pageNumber - 1) * paginatedResult.pageSize + 1 }} - 
+    {{ Math.min(paginatedResult.pageNumber * paginatedResult.pageSize, paginatedResult.totalCount) }} 
+    of {{ paginatedResult.totalCount }} stories
+  </div>
+  
+  <div class="pagination-controls">
+    <!-- Previous button -->
+    <button 
+      class="pagination-btn" 
+      [class.disabled]="!paginatedResult.hasPrevious"
+      [disabled]="!paginatedResult.hasPrevious"
+      (click)="onPageClick(paginatedResult.pageNumber - 1)">
+      « Previous
+    </button>
+    
+    <!-- Page numbers -->
+    <button 
+      *ngFor="let page of getPageNumbers()" 
+      class="pagination-btn page-number"
+      [class.active]="page === paginatedResult.pageNumber"
+      (click)="onPageClick(page)">
+      {{ page }}
+    </button>
+    
+    <!-- Next button -->
+    <button 
+      class="pagination-btn" 
+      [class.disabled]="!paginatedResult.hasNext"
+      [disabled]="!paginatedResult.hasNext"
+      (click)="onPageClick(paginatedResult.pageNumber + 1)">
+      Next »
+    </button>
+  </div>
+</nav>
