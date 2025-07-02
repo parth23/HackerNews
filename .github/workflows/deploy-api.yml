@@ -1,0 +1,44 @@
+name: Deploy .NET 8 API to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'HackerNewsApi/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: |
+          cd HackerNewsApi
+          dotnet restore
+
+      - name: Build API
+        run: |
+          cd HackerNewsApi
+          dotnet build --configuration Release --no-restore
+
+      - name: Publish API
+        run: |
+          cd HackerNewsApi
+          dotnet publish --configuration Release --output ./publish --no-build
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'myhackernewsapi' # Replace with your Azure API App Service name
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
+          package: ./HackerNewsApi/publish

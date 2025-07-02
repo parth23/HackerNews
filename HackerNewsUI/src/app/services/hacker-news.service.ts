@@ -3,12 +3,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HackerNewsStory, PaginatedResult, StoryQueryParameters } from '../models/hacker-news.models';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HackerNewsService {
-  public readonly apiUrl = 'http://localhost:5109/api/stories';
+  private apiUrl = `${environment.apiUrl}/stories`;
 
   constructor(private http: HttpClient) { }
 
