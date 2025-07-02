@@ -51,6 +51,8 @@ app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 app.MapControllers();
 
+app.MapGet("/", () => "Hacker News API is running. Navigate to /swagger for documentation.");
+
 app.Run();
 
 // Make the implicit Program class public so test projects can access it
