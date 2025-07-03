@@ -1,33 +1,41 @@
-name: Deploy UI to Azure App Service
+name: Build and Deploy Angular 20 App to Azure
 
 on:
   push:
     branches:
-      - main
-    paths:
-      - 'HackerNewsUI/**'
+      - main  # or your default branch
+
+defaults:
+  run:
+    working-directory: HackerNewsUI
 
 jobs:
-  build-and-deploy-ui:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Angular CLI
-        run: npm install -g @angular/cli
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-      - name: Build Angular UI
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Angular app
+        run: npm run build -- --configuration production
+
+      - name: Copy routes.json into dist
         run: |
-          cd HackerNewsUI
-          npm install
-          ng build --configuration production --output-path=dist
+          mkdir -p dist/$(ls dist)/
+          cp scripts/routes.json dist/$(ls dist)/
 
-      - name: Deploy to Azure App Service
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'myhackernews'
-          slot-name: 'production'
+          app-name: myhackernews         # Replace with your Azure Web App name
           publish-profile: ${{ secrets.AZURE_UI_PUBLISH_PROFILE }}
-          package: './HackerNewsUI/dist'
+          package: dist/$(ls dist)
