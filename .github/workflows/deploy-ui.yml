@@ -1,0 +1,33 @@
+name: Deploy UI to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'HackerNewsUI/**'
+
+jobs:
+  build-and-deploy-ui:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
+      - name: Build Angular UI
+        run: |
+          cd HackerNewsUI
+          npm install
+          ng build --configuration production --output-path=dist
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'myhackernews'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AZURE_UI_PUBLISH_PROFILE }}
+          package: './HackerNewsUI/dist'
